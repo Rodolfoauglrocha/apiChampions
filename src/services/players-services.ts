@@ -1,3 +1,4 @@
+import { nameModel } from "../models/name-model"
 import { PlayerModel } from "../models/player-model"
 import * as PlayerRepository from "../repositories/player-repository"
 import * as HttpResponse from "../utils/http-helper"
@@ -47,9 +48,21 @@ export const createPlayerService = async(player: PlayerModel)=> {
 
 export const deletePlayerService = async(id: number)=> {
    let response = null
-   await PlayerRepository.deletePlayer(id)
+   const isDeleted = await PlayerRepository.deletePlayer(id)
+   
+   if(isDeleted){
+      response = HttpResponse.ok({message: "Delete"})
+   }else{
+      response = HttpResponse.badRequest()
+   }
 
-   response = HttpResponse.ok({message: "Delete"})
+   return response
+   
+}
+
+export const updatePlayerService = async(id: number, name: nameModel)=> {
+   const data = await PlayerRepository.findModifyPlayer(id, name)
+   const response = await HttpResponse.ok(data)
 
    return response
 }

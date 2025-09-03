@@ -1,6 +1,8 @@
 import {Request, Response} from "express"
-import { deletePlayerService, createPlayerService, getPlayerByIdService, getPlayerData } from "../services/players-services"
+import { deletePlayerService, createPlayerService, getPlayerByIdService, getPlayerData, updatePlayerService } from "../services/players-services"
 import { noContent, ok } from "../utils/http-helper"
+import { nameModel } from "../models/name-model"
+import { findModifyPlayer } from "../repositories/player-repository"
 
 export const getPlayer = async (req: Request, res: Response) => {
    const httpResponse = await getPlayerData()
@@ -32,4 +34,14 @@ export const deletePlayer = async (req:Request, res: Response) => {
    const httpResponse = await deletePlayerService(id)
 
    res.status(httpResponse.statusCode).json(httpResponse.body)
+}
+
+export const updatePlayer = async (req:Request, res: Response) => {
+  const id = parseInt(req.params.id)
+  const bodyValue:nameModel = req.body
+
+   const httpResponse = await updatePlayerService(id, bodyValue)
+
+  res.status(httpResponse.statusCode).json(httpResponse.body)
+
 }

@@ -1,3 +1,4 @@
+import { nameModel } from "../models/name-model"
 import { PlayerModel } from "../models/player-model"
 
 
@@ -20,6 +21,21 @@ export const insertPlayer = async(player: PlayerModel)=>{
 
 export const deletePlayer = async(id: number)=>{
     const index = database.findIndex(p => p.id === id)
-    console.log(index)
-    database.splice(index, 1)
+
+    if(index !== -1){
+        database.splice(index, 1)
+        return true
+    }
+
+    return false
+    //console.log(index)
+    //database.splice(index, 1)
+}
+
+export const findModifyPlayer = async (id:number, data: nameModel): Promise<nameModel> => {
+    const index = database.findIndex((p) => p.id === id)
+    database[index].name = data.name
+    console.log(String(data.name))
+    return database[index]
+    
 }
