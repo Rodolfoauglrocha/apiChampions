@@ -1,5 +1,7 @@
+import { PlayerModel } from "../models/player-model"
 import * as PlayerRepository from "../repositories/player-repository"
-import { noContent, ok } from "../utils/http-helper"
+import * as HttpResponse from "../utils/http-helper"
+
 
 export const getPlayerData = async()=> {
     
@@ -8,9 +10,9 @@ export const getPlayerData = async()=> {
     let response = null
 
     if(data){
-       response = await ok(data)
+       response = await HttpResponse.ok(data)
     } else {
-       response = await noContent() 
+       response = await HttpResponse.noContent()
     }
     
     return response
@@ -22,10 +24,32 @@ export const getPlayerByIdService = async(id: number) => {
    let response = null
 
    if(data){
-      response = await ok(data)
+      response = await HttpResponse.ok(data)
    } else {
-      response = noContent()
+      response = HttpResponse.noContent()
    }
+
+   return response
+}
+
+export const createPlayerService = async(player: PlayerModel)=> {
+
+   if(player){
+      await PlayerRepository.insertPlayer(player)
+
+      return HttpResponse.created()
+
+   }else {
+      console.log("bad")
+      return HttpResponse.badRequest()
+   }
+}
+
+export const deletePlayerService = async(id: number)=> {
+   let response = null
+   await PlayerRepository.deletePlayer(id)
+
+   response = HttpResponse.ok({message: "Delete"})
 
    return response
 }

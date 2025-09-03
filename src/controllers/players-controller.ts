@@ -1,6 +1,6 @@
 import {Request, Response} from "express"
-import { getPlayerByIdService, getPlayerData } from "../services/players-services"
-import { ok } from "../utils/http-helper"
+import { deletePlayerService, createPlayerService, getPlayerByIdService, getPlayerData } from "../services/players-services"
+import { noContent, ok } from "../utils/http-helper"
 
 export const getPlayer = async (req: Request, res: Response) => {
    const httpResponse = await getPlayerData()
@@ -16,5 +16,20 @@ export const getPlayerById = async(req: Request, res: Response) => {
 }
 
 export const postPlayer = async(req: Request, res: Response)=> {
-   
+   const bodyValue = req.body
+   const httpResponse = await createPlayerService(bodyValue)
+   if(httpResponse){
+      res.status(httpResponse.statusCode).json(httpResponse?.body)
+   } else {
+      const response = await noContent()
+      res.status(response.statusCode).json(response.body)
+   }
+   console.log(bodyValue)
+}
+
+export const deletePlayer = async (req:Request, res: Response) => {
+   const id = parseInt(req.params.id)
+   const httpResponse = await deletePlayerService(id)
+
+   res.status(httpResponse.statusCode).json(httpResponse.body)
 }
